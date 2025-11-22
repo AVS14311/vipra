@@ -31,7 +31,7 @@ function DateCalculator({ startDate = '2022-11-23' }) {
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 border-2 md:border-4 border-white/30 shadow-2xl my-6 md:my-10 mx-2 sm:mx-0">
       <h2 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-3 md:mb-6 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)] px-2">
-        📅 Our Journey Together 📅
+        Our Journey Together
       </h2>
       <p className="text-white text-center mb-4 md:mb-6 text-sm sm:text-base md:text-lg px-2">
         Since November 23, 2022 - The day we became a couple 💕
