@@ -25,7 +25,7 @@ function PasswordPrompt({ onSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (password === '123') {
+    if (password === 'Vipra' || password === 'vipra') {
       onSuccess()
     } else {
       setPassword('')
