@@ -1,50 +1,142 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import MusicPlayer from './MusicPlayer'
-import AnniversaryCountdown from './AnniversaryCountdown'
-import DateCalculator from './DateCalculator'
-import Confetti from './Confetti'
 
 function Home({ onImageClick }) {
-  const [hearts, setHearts] = useState([])
-  const [sparkles, setSparkles] = useState([])
-  const [showConfetti, setShowConfetti] = useState(false)
+  const canvasRef = useRef(null)
+  const [hearts, setHearts] = useState([]) // For floating hearts
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
 
+  // Floating Hearts Logic for Home
   useEffect(() => {
-    // Floating hearts
     const heartInterval = setInterval(() => {
-      setHearts((prev) => [
-        ...prev,
-        {
+      setHearts((prev) => {
+        const newHeart = {
           id: Date.now() + Math.random(),
           left: Math.random() * 100,
           delay: Math.random() * 2,
-        },
-      ])
-    }, 600)
+        }
+        // Keep list size manageable
+        const cleanup = prev.length > 50 ? prev.slice(1) : prev
+        return [...cleanup, newHeart]
+      })
+    }, 800)
 
-    // Sparkles
-    const sparkleInterval = setInterval(() => {
-      setSparkles((prev) => [
-        ...prev,
-        {
-          id: Date.now() + Math.random(),
-          left: Math.random() * 100,
-          top: Math.random() * 100,
-          delay: Math.random() * 2,
-        },
-      ])
-    }, 400)
-
-    return () => {
-      clearInterval(heartInterval)
-      clearInterval(sparkleInterval)
-    }
+    return () => clearInterval(heartInterval)
   }, [])
 
+  // Countdown Logic
   useEffect(() => {
-    // Trigger confetti on page load
-    setShowConfetti(true)
-    setTimeout(() => setShowConfetti(false), 100)
+    const calculateTimeLeft = () => {
+      // Target: Dec 31, 2025 -> Jan 1, 2026
+      // Assuming user wants 2026 as the target
+      const targetDate = new Date('2026-01-01T00:00:00')
+      const now = new Date()
+      const difference = targetDate - now
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        })
+      } else {
+        // Happy New Year!
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      }
+    }
+
+    calculateTimeLeft()
+    const interval = setInterval(calculateTimeLeft, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Fireworks Logic
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    let particles = []
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x
+        this.y = y
+        this.color = color
+        this.velocity = {
+          x: (Math.random() - 0.5) * 8,
+          y: (Math.random() - 0.5) * 8,
+        }
+        this.alpha = 1
+        this.friction = 0.95
+      }
+
+      draw() {
+        ctx.globalAlpha = this.alpha
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2, false)
+        ctx.fillStyle = this.color
+        ctx.fill()
+      }
+
+      update() {
+        this.velocity.x *= this.friction
+        this.velocity.y *= this.friction
+        this.x += this.velocity.x
+        this.y += this.velocity.y
+        this.alpha -= 0.01
+      }
+    }
+
+    const animate = () => {
+      requestAnimationFrame(animate)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)' // Trail effect
+      ctx.fillRect(0, 0, canvas.width, canvas.height) // Clear canvas with fading trail
+
+      particles.forEach((particle, index) => {
+        if (particle.alpha > 0) {
+          particle.update()
+          particle.draw()
+        } else {
+          particles.splice(index, 1)
+        }
+      })
+    }
+
+    const launchFirework = () => {
+      const x = Math.random() * canvas.width
+      const y = Math.random() * canvas.height * 0.5 // Top half
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ffffff']
+      const color = colors[Math.floor(Math.random() * colors.length)]
+
+      for (let i = 0; i < 50; i++) {
+        particles.push(new Particle(x, y, color))
+      }
+    }
+
+    animate()
+    const fireworkInterval = setInterval(launchFirework, 800) // Launch fireworks periodically
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      clearInterval(fireworkInterval)
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   const homeImages = [
@@ -62,52 +154,26 @@ function Home({ onImageClick }) {
     'media/images/35f65b3c-f268-460c-a23e-a3edce291afd.jpg',
   ]
 
-  const anniversaryMessages = [
-    { type: 'title', text: "HAPPY ANNIVERSARY", emoji: "💕💗💘💖", size: 'xl' },
-    { type: 'highlight', text: "MY BEAUTIFUL LOVE", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "Every day with you is a celebration of love. Our anniversary is a beautiful reminder of the journey we've shared together.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "I LOVE YOU MORE THAN WORDS CAN EXPRESS", emoji: "💗", size: 'lg' },
-    { type: 'message', text: "You make every moment magical, every day special, and every year unforgettable.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "In your eyes, I found my home. In your heart, I found my love. In your soul, I found my other half.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY EVERYTHING", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "Time flies when you're having fun, and with you, every second is pure joy.", emoji: "🥰", size: 'md' },
-    { type: 'quote', text: "You are not just my girlfriend, you are my best friend, my confidant, my partner in crime, and my everything.", emoji: "💗", size: 'md' },
-    { type: 'highlight', text: "I FALL IN LOVE WITH YOU MORE EVERY DAY", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "Our love story is my favorite, and I can't wait to write many more chapters with you.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "You are the reason I smile, the reason I laugh, and the reason my heart beats faster every day.", emoji: "💖", size: 'md' },
-    { type: 'highlight', text: "THANK YOU FOR LOVING ME", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "Every moment spent with you is a treasure I hold close to my heart. I love you beyond measure.", emoji: "💗", size: 'md' },
-    { type: 'quote', text: "You are my sunshine on cloudy days, my strength when I'm weak, and my happiness always.", emoji: "💘", size: 'md' },
-    { type: 'highlight', text: "I PROMISE TO LOVE YOU FOREVER", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "You are the most beautiful person I know, inside and out. I'm so lucky to have you.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "Our anniversary marks another year of laughter, love, and beautiful memories together.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY DREAM COME TRUE", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "I can't imagine my life without you. You complete me in every way possible.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "You are my past, my present, and my future. I love you with all my heart.", emoji: "💗", size: 'md' },
-    { type: 'highlight', text: "OUR LOVE GETS BETTER WITH TIME", emoji: "🥂💕", size: 'lg' },
-    { type: 'message', text: "You are the melody to my song, the color to my world, and the love of my life.", emoji: "💘", size: 'md' },
-    { type: 'quote', text: "I love you not only for what you are, but for what I am when I am with you.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "EVERY MOMENT WITH YOU IS A GIFT", emoji: "💖", size: 'lg' },
-    { type: 'message', text: "You make my heart skip a beat, my soul sing, and my life complete.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "I love you more than all the stars in the sky, more than all the sand on the beach.", emoji: "💘", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY PERSON, MY LOVE, MY EVERYTHING", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "You are the best thing that has ever happened to me. I love you beyond words.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "Our love story is just beginning, and I can't wait to see what the future holds.", emoji: "💕", size: 'md' },
-    { type: 'title', text: "FOREVER AND ALWAYS", emoji: "💕💗💘💖", size: 'xl' },
-  ]
-
   return (
-    <section id="home" className="scroll-mt-20 p-5 max-w-6xl mx-auto w-full relative overflow-hidden">
-      {/* Floating Hearts Background */}
+    <section id="home" className="scroll-mt-20 p-5 max-w-6xl mx-auto w-full relative overflow-hidden min-h-screen">
+      {/* Fireworks Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{ background: 'transparent' }} // Let main app background show through or assume it's dark
+      />
+
+      {/* Floating Hearts Layer */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {hearts.map((heart) => (
           <div
             key={heart.id}
-            className="absolute text-3xl animate-heartFloat"
+            className="absolute text-2xl animate-heartFloat"
             style={{
               left: `${heart.left}%`,
               animationDelay: `${heart.delay}s`,
               animationDuration: '5s',
+              opacity: 0.7,
             }}
           >
             💕
@@ -115,159 +181,79 @@ function Home({ onImageClick }) {
         ))}
       </div>
 
-      {/* Sparkles */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {sparkles.map((sparkle) => (
-          <div
-            key={sparkle.id}
-            className="absolute text-2xl animate-sparkle"
-            style={{
-              left: `${sparkle.left}%`,
-              top: `${sparkle.top}%`,
-              animationDelay: `${sparkle.delay}s`,
-              animationDuration: `${2 + Math.random() * 2}s`,
-            }}
-          >
-            ✨
-          </div>
-        ))}
-      </div>
+      <div className="relative z-10 flex flex-col items-center">
 
-      <div className="relative z-10">
-        {/* Special Anniversary Message Section */}
-        <div className="text-center my-6 md:my-12 py-4 md:py-8 px-3 md:px-4 bg-gradient-to-r from-pink-500/20 via-red-500/20 to-pink-500/20 backdrop-blur-md rounded-2xl md:rounded-3xl border-2 md:border-4 border-white/30 shadow-2xl animate-fadeInUp">
-          <h1 className="text-white text-[1.8rem] sm:text-[2.2rem] md:text-[3rem] lg:text-[4rem] font-bold my-2 md:my-4 break-words drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] leading-tight">
-            Happy Anniversary 💋💋💋
+        {/* Header Section */}
+        <div className="text-center my-8 md:my-12 animate-fadeInUp">
+          <h1 className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] font-serif mb-4">
+            Goodbye 2025
           </h1>
-          <h2 className="text-white text-[1.2rem] sm:text-[1.5rem] md:text-[2rem] lg:text-[2.5rem] font-bold my-2 md:my-3 break-words drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] leading-tight">
-            My Love 💋 My Heart 💋
+          <h2 className="text-4xl md:text-6xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-pulse">
+            👋 Welcome 2026 🎉
           </h2>
-          <h2 className="text-white text-[1.2rem] sm:text-[1.5rem] md:text-[2rem] lg:text-[2.5rem] font-bold my-2 md:my-3 break-words drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] leading-tight">
-            My Dear Wife 💋 My Everything 💋
-          </h2>
-          <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl my-4 md:my-6 animate-heartbeat">
-            💋💋💋💋💋💋💋💋💋💋
+        </div>
+
+        {/* Featured Love Image (HNY) */}
+        <div className="my-6 md:my-10 animate-scaleIn">
+          <div className="relative group cursor-pointer" onClick={() => onImageClick('/media/love/hny.jpeg')}>
+            <img
+              src="/media/love/hny.jpeg"
+              alt="Happy New Year My Love"
+              className="rounded-3xl border-4 border-pink-400/50 shadow-[0_0_30px_rgba(255,105,180,0.6)] max-w-full md:max-w-2xl w-auto h-auto transform transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+              <span className="text-white text-2xl font-serif italic">My Forever Love ❤️</span>
+            </div>
           </div>
-          
-          {/* Surprise Music Button */}
+        </div>
+
+        {/* Countdown Timer */}
+        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 md:p-10 border-2 border-white/20 shadow-2xl my-8 w-full max-w-4xl animate-slideIn">
+          <h3 className="text-white text-2xl md:text-3xl font-bold text-center mb-6 uppercase tracking-widest text-shadow-sm">
+            Countdown to Our Best Year Yet
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
+            {[
+              { label: 'Days', value: timeLeft.days },
+              { label: 'Hours', value: timeLeft.hours },
+              { label: 'Minutes', value: timeLeft.minutes },
+              { label: 'Seconds', value: timeLeft.seconds },
+            ].map((item, idx) => (
+              <div key={idx} className="flex flex-col items-center">
+                <div className="bg-black/40 rounded-2xl w-full py-4 md:py-6 border border-white/10 shadow-inner">
+                  <span className="text-4xl md:text-6xl font-mono font-bold text-white tabular-nums drop-shadow-md">
+                    {String(item.value).padStart(2, '0')}
+                  </span>
+                </div>
+                <span className="text-white/80 text-sm md:text-lg mt-2 uppercase tracking-wide font-medium">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Romantic Message */}
+        <div className="text-center max-w-3xl mx-auto my-8 px-4 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+          <h3 className="text-3xl md:text-4xl font-serif text-pink-300 mb-4 drop-shadow-md">Entering 2026 Hand in Hand</h3>
+          <p className="text-white text-xl md:text-2xl font-light leading-relaxed drop-shadow-md italic">
+            "Another year has passed, but my love for you only grows stronger. May 2026 be filled with more laughter, more adventures, and more beautiful moments with you. You are my best resolution."
+          </p>
+          <div className="text-5xl mt-6 animate-bounce">💏</div>
+        </div>
+
+        {/* Music Player */}
+        <div className="my-6 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
           <MusicPlayer />
         </div>
 
-        {/* Animated Cake */}
-        <div className="text-center my-8 relative">
-          {/* Sparkles around cake */}
-          <div className="absolute top-0 left-1/4 text-3xl animate-sparkle" style={{ animationDelay: '0s' }}>✨</div>
-          <div className="absolute top-0 right-1/4 text-3xl animate-sparkle" style={{ animationDelay: '1s' }}>✨</div>
-          <div className="absolute bottom-0 left-1/3 text-3xl animate-sparkle" style={{ animationDelay: '0.5s' }}>✨</div>
-          <div className="absolute bottom-0 right-1/3 text-3xl animate-sparkle" style={{ animationDelay: '1.5s' }}>✨</div>
-          
-          <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
-            <div className="relative">
-              <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl animate-cakeBounce inline-block filter drop-shadow-2xl">
-                🎂
-              </div>
-              <div className="absolute -top-1 sm:-top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-3xl md:text-4xl animate-candleFlicker">
-                🕯️
-              </div>
-            </div>
-            <div className="relative">
-              <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl animate-cakeBounce inline-block filter drop-shadow-2xl" style={{ animationDelay: '0.3s' }}>
-                🎂
-              </div>
-              <div className="absolute -top-1 sm:-top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-3xl md:text-4xl animate-candleFlicker" style={{ animationDelay: '0.2s' }}>
-                🕯️
-              </div>
-            </div>
-            <div className="relative">
-              <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl animate-cakeBounce inline-block filter drop-shadow-2xl" style={{ animationDelay: '0.6s' }}>
-                🎂
-              </div>
-              <div className="absolute -top-1 sm:-top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-3xl md:text-4xl animate-candleFlicker" style={{ animationDelay: '0.4s' }}>
-                🕯️
-              </div>
-            </div>
-          </div>
-          
-          {/* Glow effect */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="text-9xl opacity-20 blur-3xl animate-pulseGlow">🎂</div>
-          </div>
-        </div>
-
-        {/* Confetti */}
-        <Confetti trigger={showConfetti} />
-
-        {/* Date Calculator */}
-        <DateCalculator startDate="2022-11-23" />
-
-        {/* Anniversary Countdown */}
-        <AnniversaryCountdown anniversaryDate="2022-11-23" />
-
-        {/* Anniversary Messages */}
-        {anniversaryMessages.map((msg, idx) => {
-          const getMessageStyle = () => {
-            if (msg.type === 'title') {
-              return "text-white text-[1.8rem] sm:text-[2.2rem] md:text-[3rem] lg:text-[4rem] font-bold my-4 md:my-8 text-center py-3 md:py-6 break-words drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] animate-fadeInUp relative px-2"
-            }
-            if (msg.type === 'highlight') {
-              return "text-white text-[1.3rem] sm:text-[1.5rem] md:text-[2rem] lg:text-[2.5rem] font-bold my-3 md:my-6 text-center py-2 md:py-4 break-words drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] animate-fadeInUp px-2"
-            }
-            if (msg.type === 'quote') {
-              return "text-white text-[1rem] sm:text-[1.2rem] md:text-[1.5rem] lg:text-[1.8rem] my-3 md:my-5 text-center py-3 md:py-4 px-3 md:px-6 break-words drop-shadow-[2px_2px_8px_rgba(0,0,0,0.6)] animate-fadeInUp italic bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl border-2 border-white/30 mx-2 md:mx-4"
-            }
-            return "text-white text-[1rem] sm:text-[1.2rem] md:text-[1.4rem] lg:text-[1.6rem] my-3 md:my-4 text-center py-2 md:py-3 px-2 md:px-4 break-words drop-shadow-[2px_2px_6px_rgba(0,0,0,0.5)] animate-fadeInUp"
-          }
-
-          if (msg.type === 'title') {
-            return (
-              <div
-                key={idx}
-                className={getMessageStyle()}
-                style={{
-                  animationDelay: `${idx * 0.08}s`,
-                }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 to-pink-500 blur-2xl opacity-50"></div>
-                  <div className="relative flex items-center justify-center gap-4 flex-wrap">
-                    <span className="text-5xl md:text-7xl animate-heartbeat" style={{ animationDelay: `${idx * 0.1}s` }}>
-                      {msg.emoji}
-                    </span>
-                    <span className="bg-gradient-to-r from-pink-400 via-red-400 to-pink-400 bg-clip-text text-transparent">
-                      {msg.text}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )
-          }
-
-          return (
-            <div
-              key={idx}
-              className={getMessageStyle()}
-              style={{
-                animationDelay: `${idx * 0.08}s`,
-              }}
-            >
-              <div className="flex items-center justify-center gap-3 flex-wrap">
-                <span className="text-3xl md:text-4xl animate-heartbeat" style={{ animationDelay: `${idx * 0.1}s` }}>
-                  {msg.emoji}
-                </span>
-                <span>{msg.text}</span>
-              </div>
-            </div>
-          )
-        })}
-
         {/* Image Gallery */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 my-6 md:my-10 px-2 sm:px-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 my-6 md:my-10 px-2 sm:px-0 w-full animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
           {homeImages.map((img, idx) => (
             <div
               key={idx}
-              className="relative rounded-xl md:rounded-2xl border-2 md:border-4 border-white/50 shadow-2xl animate-fadeInUp hover:scale-105 transition-all duration-300 cursor-pointer group bg-white/10 backdrop-blur-sm"
+              className="relative rounded-xl md:rounded-2xl border-2 md:border-4 border-white/50 shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group bg-white/10 backdrop-blur-sm"
               style={{
-                animationDelay: `${(anniversaryMessages.length * 0.1) + (idx * 0.15)}s`,
                 height: '300px',
                 minHeight: '250px',
                 display: 'flex',
@@ -295,18 +281,6 @@ function Home({ onImageClick }) {
           ))}
         </div>
 
-        {/* Final Love Message */}
-        <div className="text-center my-12">
-          <div className="text-6xl animate-heartbeat inline-block mx-2">💕</div>
-          <div className="text-6xl animate-heartbeat inline-block mx-2" style={{ animationDelay: '0.2s' }}>💗</div>
-          <div className="text-6xl animate-heartbeat inline-block mx-2" style={{ animationDelay: '0.4s' }}>💘</div>
-          <div className="text-6xl animate-heartbeat inline-block mx-2" style={{ animationDelay: '0.6s' }}>💖</div>
-          <div className="text-6xl animate-heartbeat inline-block mx-2" style={{ animationDelay: '0.8s' }}>💕</div>
-        </div>
-
-        <h1 className="text-white text-[2.5rem] my-8 text-center py-4 break-words drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)] animate-pulse">
-          FOREVER AND ALWAYS 💕💗💘💖
-        </h1>
       </div>
     </section>
   )
