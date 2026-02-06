@@ -9,6 +9,7 @@ import AnniversaryPage from './pages/AnniversaryPage'
 import FunnyPage from './pages/FunnyPage'
 import ImportantDatesPage from './pages/ImportantDatesPage'
 import LoveTimelinePage from './pages/LoveTimelinePage'
+import RoseDayPage from './pages/RoseDayPage'
 import { useState } from 'react'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/funny" element={<FunnyPage />} />
             <Route path="/important-dates" element={<ImportantDatesPage />} />
             <Route path="/love-timeline" element={<LoveTimelinePage />} />
+            <Route path="/rose-day" element={<RoseDayPage />} />
           </Routes>
         </Layout>
       </LightboxProvider>

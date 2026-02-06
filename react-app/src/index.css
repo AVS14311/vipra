@@ -212,6 +212,194 @@
   animation: confettiFall 3s linear forwards;
 }
 
+/* Rose Day — petal fall & rose glow */
+@keyframes petalFall {
+  0% {
+    transform: translateY(-20vh) rotate(0deg) translateX(0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg) translateX(calc(var(--drift) * 1vw));
+    opacity: 0.3;
+  }
+}
+
+@keyframes roseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(220, 20, 60, 0.6)) drop-shadow(0 0 24px rgba(255, 105, 180, 0.3));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.9)) drop-shadow(0 0 40px rgba(255, 182, 193, 0.5));
+    transform: scale(1.05);
+  }
+}
+
+@keyframes roseFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+@keyframes textShine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes bloomIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-petalFall {
+  animation: petalFall 8s linear infinite;
+}
+
+.animate-roseGlow {
+  animation: roseGlow 2.5s ease-in-out infinite;
+}
+
+.animate-roseFloat {
+  animation: roseFloat 4s ease-in-out infinite;
+}
+
+.animate-bloomIn {
+  animation: bloomIn 1s ease-out forwards;
+}
+
+/* Rose Day — wow: bokeh, breath, burst */
+@keyframes bokehPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.25;
+  }
+}
+
+@keyframes roseBreath {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 30px rgba(220, 20, 60, 0.7)) drop-shadow(0 0 60px rgba(255, 105, 180, 0.4));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 50px rgba(220, 20, 60, 0.9)) drop-shadow(0 0 90px rgba(255, 182, 193, 0.5));
+  }
+}
+
+@keyframes petalBurst {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--bx), var(--by)) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-bokehPulse {
+  animation: bokehPulse 6s ease-in-out infinite;
+}
+
+.animate-roseBreath {
+  animation: roseBreath 3s ease-in-out infinite;
+}
+
+.animate-fadeUpIn {
+  animation: fadeUpIn 0.8s ease-out forwards;
+}
+
+.animate-petalBurst {
+  animation: petalBurst 1s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Give a rose: rose moves toward you, then "For you" */
+@keyframes giveRoseFly {
+  0% {
+    transform: translateY(80px) scale(0.3);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(-20px) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes giveRosePetal {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(var(--py, -150px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes forYouReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-giveRoseFly {
+  animation: giveRoseFly 1.8s ease-out forwards;
+}
+
+.animate-forYouReveal {
+  animation: forYouReveal 0.6s ease-out 1.4s forwards;
+  opacity: 0;
+}
+
+.animate-giveRosePetal {
+  animation: giveRosePetal 1.2s ease-out forwards;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   body {
