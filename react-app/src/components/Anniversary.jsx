@@ -101,40 +101,6 @@ function Anniversary({ onImageClick }) {
     ['media/New/e18080d2-5ce3-4923-ab61-bbe90c491621.jpg', 'media/New/f3ce862b-e405-44bd-9fd0-6452d4281eda.jpg', 'media/New/vvv.jpg', 'media/New/93a05d76-cf6d-4402-b095-c384c21861eb.jpg'],
   ]
 
-  const anniversaryMessages = [
-    { type: 'title', text: "HAPPY ANNIVERSARY", emoji: "💕💗💘💖", size: 'xl' },
-    { type: 'highlight', text: "MY BEAUTIFUL LOVE", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "Every day with you is a celebration of love. Our anniversary is a beautiful reminder of the journey we've shared together.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "I LOVE YOU MORE THAN WORDS CAN EXPRESS", emoji: "💗", size: 'lg' },
-    { type: 'message', text: "You make every moment magical, every day special, and every year unforgettable.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "In your eyes, I found my home. In your heart, I found my love. In your soul, I found my other half.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY EVERYTHING", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "Time flies when you're having fun, and with you, every second is pure joy.", emoji: "🥰", size: 'md' },
-    { type: 'quote', text: "You are not just my girlfriend, you are my best friend, my confidant, my partner in crime, and my everything.", emoji: "💗", size: 'md' },
-    { type: 'highlight', text: "I FALL IN LOVE WITH YOU MORE EVERY DAY", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "Our love story is my favorite, and I can't wait to write many more chapters with you.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "You are the reason I smile, the reason I laugh, and the reason my heart beats faster every day.", emoji: "💖", size: 'md' },
-    { type: 'highlight', text: "THANK YOU FOR LOVING ME", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "Every moment spent with you is a treasure I hold close to my heart. I love you beyond measure.", emoji: "💗", size: 'md' },
-    { type: 'quote', text: "You are my sunshine on cloudy days, my strength when I'm weak, and my happiness always.", emoji: "💘", size: 'md' },
-    { type: 'highlight', text: "I PROMISE TO LOVE YOU FOREVER", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "You are the most beautiful person I know, inside and out. I'm so lucky to have you.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "Our anniversary marks another year of laughter, love, and beautiful memories together.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY DREAM COME TRUE", emoji: "💘", size: 'lg' },
-    { type: 'message', text: "I can't imagine my life without you. You complete me in every way possible.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "You are my past, my present, and my future. I love you with all my heart.", emoji: "💗", size: 'md' },
-    { type: 'highlight', text: "OUR LOVE GETS BETTER WITH TIME", emoji: "🥂💕", size: 'lg' },
-    { type: 'message', text: "You are the melody to my song, the color to my world, and the love of my life.", emoji: "💘", size: 'md' },
-    { type: 'quote', text: "I love you not only for what you are, but for what I am when I am with you.", emoji: "💕", size: 'md' },
-    { type: 'highlight', text: "EVERY MOMENT WITH YOU IS A GIFT", emoji: "💖", size: 'lg' },
-    { type: 'message', text: "You make my heart skip a beat, my soul sing, and my life complete.", emoji: "💕", size: 'md' },
-    { type: 'quote', text: "I love you more than all the stars in the sky, more than all the sand on the beach.", emoji: "💘", size: 'md' },
-    { type: 'highlight', text: "YOU ARE MY PERSON, MY LOVE, MY EVERYTHING", emoji: "💕", size: 'lg' },
-    { type: 'message', text: "You are the best thing that has ever happened to me. I love you beyond words.", emoji: "💖", size: 'md' },
-    { type: 'quote', text: "Our love story is just beginning, and I can't wait to see what the future holds.", emoji: "💕", size: 'md' },
-    { type: 'title', text: "FOREVER AND ALWAYS", emoji: "💕💗💘💖", size: 'xl' },
-  ]
-
   const ImageTable = ({ images, index }) => (
     <table className="w-full border-collapse my-5 mx-auto bg-white/10 rounded-2xl overflow-hidden backdrop-blur-sm shadow-lg animate-fadeInUp" style={{ animationDelay: `${index * 0.2}s` }}>
       <tbody>
