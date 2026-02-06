@@ -13,7 +13,7 @@ if errorlevel 1 (
 
 for %%F in ("Rose Video.mp4" "Rose 2.mp4" "Rose 3.mp4") do (
   echo Compressing %%F ...
-  ffmpeg -y -i "%%F" -vf "scale=-2:480" -c:v libx264 -crf 32 -preset slow -c:a aac -b:a 64k -movflags +faststart "%%~nF_compressed.mp4"
+  ffmpeg -y -i "%%F" -vf "scale=-2:360" -c:v libx264 -crf 35 -preset slow -c:a aac -b:a 48k -movflags +faststart "%%~nF_compressed.mp4"
   if not errorlevel 1 (
     del "%%F"
     ren "%%~nF_compressed.mp4" "%%F"
