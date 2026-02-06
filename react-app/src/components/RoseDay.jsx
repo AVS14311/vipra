@@ -241,6 +241,7 @@ function RoseDay() {
         <div className="w-screen relative left-1/2 -ml-[50vw] mb-10 sm:mb-14 md:mb-16">
           <video
             src="/media/Rose Video.mp4"
+            autoPlay
             loop
             muted
             playsInline
@@ -354,6 +355,7 @@ function RoseDay() {
         >
           <video
             src="/media/Rose 2.mp4"
+            autoPlay
             loop
             muted
             playsInline
@@ -459,6 +461,7 @@ function RoseDay() {
         <div className="w-screen relative left-1/2 -ml-[50vw] mt-10 sm:mt-14 md:mt-16 animate-fadeUpIn opacity-0" style={{ animationDelay: '1.9s', animationFillMode: 'forwards' }}>
           <video
             src="/media/Rose 3.mp4"
+            autoPlay
             loop
             muted
             playsInline
