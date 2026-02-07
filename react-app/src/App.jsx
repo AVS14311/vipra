@@ -10,6 +10,13 @@ import FunnyPage from './pages/FunnyPage'
 import ImportantDatesPage from './pages/ImportantDatesPage'
 import LoveTimelinePage from './pages/LoveTimelinePage'
 import RoseDayPage from './pages/RoseDayPage'
+import ProposeDayPage from './pages/ProposeDayPage'
+import ChocolateDayPage from './pages/ChocolateDayPage'
+import TeddyDayPage from './pages/TeddyDayPage'
+import PromiseDayPage from './pages/PromiseDayPage'
+import HugDayPage from './pages/HugDayPage'
+import KissDayPage from './pages/KissDayPage'
+import ValentinesDayPage from './pages/ValentinesDayPage'
 import { useState } from 'react'
 
 function App() {
@@ -33,6 +40,13 @@ function App() {
             <Route path="/important-dates" element={<ImportantDatesPage />} />
             <Route path="/love-timeline" element={<LoveTimelinePage />} />
             <Route path="/rose-day" element={<RoseDayPage />} />
+            <Route path="/propose-day" element={<ProposeDayPage />} />
+            <Route path="/chocolate-day" element={<ChocolateDayPage />} />
+            <Route path="/teddy-day" element={<TeddyDayPage />} />
+            <Route path="/promise-day" element={<PromiseDayPage />} />
+            <Route path="/hug-day" element={<HugDayPage />} />
+            <Route path="/kiss-day" element={<KissDayPage />} />
+            <Route path="/valentines-day" element={<ValentinesDayPage />} />
           </Routes>
         </Layout>
       </LightboxProvider>

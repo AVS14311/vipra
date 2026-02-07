@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 
 const VALENTINE_DAYS = [
   { day: 1, name: 'Rose Day', date: 'Feb 7', emoji: '🌹', short: 'A rose for my love', path: '/rose-day' },
-  { day: 2, name: 'Propose Day', date: 'Feb 8', emoji: '💍', short: 'Yes to forever', path: null },
-  { day: 3, name: 'Chocolate Day', date: 'Feb 9', emoji: '🍫', short: 'Sweet like you', path: null },
-  { day: 4, name: 'Teddy Day', date: 'Feb 10', emoji: '🧸', short: 'Cuddles & you', path: null },
-  { day: 5, name: 'Promise Day', date: 'Feb 11', emoji: '🤝', short: 'Promises I keep', path: null },
-  { day: 6, name: 'Hug Day', date: 'Feb 12', emoji: '🤗', short: 'Hugs for you', path: null },
-  { day: 7, name: 'Kiss Day', date: 'Feb 13', emoji: '💋', short: 'All my love', path: null },
-  { day: 8, name: "Valentine's Day", date: 'Feb 14', emoji: '💕', short: 'Happy Valentine\'s Day', path: null },
+  { day: 2, name: 'Propose Day', date: 'Feb 8', emoji: '💍', short: 'Yes to forever', path: '/propose-day' },
+  { day: 3, name: 'Chocolate Day', date: 'Feb 9', emoji: '🍫', short: 'Sweet like you', path: '/chocolate-day' },
+  { day: 4, name: 'Teddy Day', date: 'Feb 10', emoji: '🧸', short: 'Cuddles & you', path: '/teddy-day' },
+  { day: 5, name: 'Promise Day', date: 'Feb 11', emoji: '🤝', short: 'Promises I keep', path: '/promise-day' },
+  { day: 6, name: 'Hug Day', date: 'Feb 12', emoji: '🤗', short: 'Hugs for you', path: '/hug-day' },
+  { day: 7, name: 'Kiss Day', date: 'Feb 13', emoji: '💋', short: 'All my love', path: '/kiss-day' },
+  { day: 8, name: "Valentine's Day", date: 'Feb 14', emoji: '💕', short: 'Happy Valentine\'s Day', path: '/valentines-day' },
 ]
 
 function ValentineWeek() {

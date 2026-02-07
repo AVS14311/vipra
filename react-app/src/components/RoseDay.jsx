@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { handleInteraction } from '../utils/interactions'
+import LoveQuoteGenerator from './LoveQuoteGenerator'
 
 const PETAL_COUNT = 48
 const ROSE_COLORS = ['#c41e3a', '#b22222', '#dc143c', '#ff69b4', '#ff1493', '#db7093', '#ffb6c1', '#ffc0cb']
@@ -16,6 +18,20 @@ function RoseDay() {
   const [heroVisible, setHeroVisible] = useState(false)
   const [selectedRose, setSelectedRose] = useState(null)
   const [giveRose, setGiveRose] = useState('idle') // 'idle' | 'animating' | 'done'
+  const [bouquet, setBouquet] = useState([])
+  
+  // Petal Catch Game - Enhanced
+  const [gameActive, setGameActive] = useState(false)
+  const [gameScore, setGameScore] = useState(0)
+  const [gameTime, setGameTime] = useState(40)
+  const [fallingPetals, setFallingPetals] = useState([])
+  const [gameOver, setGameOver] = useState(false)
+  const [combo, setCombo] = useState(0)
+  const [missedPetals, setMissedPetals] = useState(0)
+  const [caughtCount, setCaughtCount] = useState(0)
+  const [lastCatchTime, setLastCatchTime] = useState(0)
+  const [showComboText, setShowComboText] = useState(false)
+  const [difficulty, setDifficulty] = useState(1)
 
   useEffect(() => {
     setPetals(
@@ -67,9 +83,126 @@ function RoseDay() {
 
   const handleGiveRose = () => {
     if (giveRose !== 'idle') return
+    handleInteraction({ sound: 'heart', haptic: true })
     setGiveRose('animating')
     setTimeout(() => setGiveRose('done'), 2000)
   }
+
+  const addToBouquet = (rose) => {
+    handleInteraction({ sound: 'pop', haptic: true, hapticIntensity: 'light' })
+    setBouquet((prev) => [...prev, { ...rose, uniqueId: Date.now() + Math.random() }])
+  }
+
+  const removeFromBouquet = (uniqueId) => {
+    handleInteraction({ sound: 'click', haptic: true, hapticIntensity: 'light' })
+    setBouquet((prev) => prev.filter((r) => r.uniqueId !== uniqueId))
+  }
+
+  // Petal Catch Game Functions - Enhanced
+  const startPetalGame = () => {
+    setGameActive(true)
+    setGameScore(0)
+    setGameTime(40)
+    setGameOver(false)
+    setFallingPetals([])
+    setCombo(0)
+    setMissedPetals(0)
+    setCaughtCount(0)
+    setDifficulty(1)
+    setLastCatchTime(0)
+    handleInteraction({ sound: 'success', haptic: true })
+  }
+
+  const catchPetal = (petal) => {
+    const now = Date.now()
+    const timeSinceLastCatch = now - lastCatchTime
+    
+    setFallingPetals(prev => prev.filter(p => p.id !== petal.id))
+    setCaughtCount(prev => prev + 1)
+    setLastCatchTime(now)
+    
+    // Combo system - catch within 1 second for combo
+    let newCombo = combo
+    if (timeSinceLastCatch < 1000 && lastCatchTime > 0) {
+      newCombo = combo + 1
+      setCombo(newCombo)
+      setShowComboText(true)
+      setTimeout(() => setShowComboText(false), 800)
+    } else {
+      setCombo(0)
+    }
+    
+    // Calculate points
+    const basePoints = petal.isSpecial ? 50 : 10
+    const comboBonus = newCombo > 0 ? newCombo * 5 : 0
+    const totalPoints = basePoints + comboBonus
+    
+    setGameScore(prev => prev + totalPoints)
+    
+    // Haptic intensity based on special petal or combo
+    const intensity = petal.isSpecial ? 'heavy' : newCombo > 2 ? 'medium' : 'light'
+    handleInteraction({ sound: petal.isSpecial ? 'success' : 'pop', haptic: true, hapticIntensity: intensity })
+  }
+
+  // Game timer and petal spawning - Enhanced
+  useEffect(() => {
+    if (!gameActive || gameOver) return
+
+    const timer = setInterval(() => {
+      setGameTime(prev => {
+        if (prev <= 1) {
+          setGameActive(false)
+          setGameOver(true)
+          handleInteraction({ sound: 'success', haptic: true, hapticIntensity: 'heavy' })
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    const petalSpawner = setInterval(() => {
+      setFallingPetals(prev => {
+        // Remove old petals and count misses
+        const now = Date.now()
+        const filtered = prev.filter(p => {
+          const age = now - p.spawnTime
+          if (age >= 4000) {
+            setMissedPetals(m => m + 1)
+            setCombo(0) // Break combo on miss
+            return false
+          }
+          return true
+        })
+        
+        // 10% chance of special golden petal
+        const isSpecial = Math.random() < 0.1
+        
+        return [
+          ...filtered,
+          {
+            id: Date.now() + Math.random(),
+            left: 10 + Math.random() * 80,
+            spawnTime: Date.now(),
+            color: isSpecial ? '#FFD700' : ROSE_COLORS[Math.floor(Math.random() * ROSE_COLORS.length)],
+            isSpecial,
+            size: isSpecial ? 48 : 32 + Math.random() * 16,
+            rotate: Math.random() * 360,
+          }
+        ]
+      })
+    }, Math.max(400, 800 - difficulty * 50)) // Gets faster as score increases
+
+    // Increase difficulty every 10 seconds
+    const difficultyTimer = setInterval(() => {
+      setDifficulty(prev => Math.min(6, prev + 0.5))
+    }, 10000)
+
+    return () => {
+      clearInterval(timer)
+      clearInterval(petalSpawner)
+      clearInterval(difficultyTimer)
+    }
+  }, [gameActive, gameOver, difficulty])
 
   const giveRosePetals = Array.from({ length: 12 }, (_, i) => ({
     id: i,
@@ -96,6 +229,9 @@ function RoseDay() {
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
       }}
     >
+      {/* Animated gradient overlay */}
+      <div className="gradient-overlay" />
+
       {/* Bokeh orbs */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {bokehSpots.map((b, i) => (
@@ -237,18 +373,6 @@ function RoseDay() {
           </p>
         </div>
 
-        {/* Video — top (full width) */}
-        <div className="w-screen relative left-1/2 -ml-[50vw] mb-10 sm:mb-14 md:mb-16">
-          <video
-            src="/media/Rose Video.mp4"
-            muted
-            playsInline
-            controls
-            className="w-full h-auto aspect-video min-h-[200px] sm:min-h-[260px] md:min-h-[320px] object-cover"
-            preload="metadata"
-          />
-        </div>
-
         {/* What is Rose Day — glass card */}
         <div
           className="bg-white/[0.06] backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-rose-400/25 p-5 sm:p-6 md:p-10 mb-10 sm:mb-14 shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-fadeUpIn opacity-0"
@@ -330,10 +454,77 @@ function RoseDay() {
           )}
         </div>
 
+        {/* Virtual Bouquet Builder */}
+        <div
+          className="mb-14 animate-fadeUpIn opacity-0"
+          style={{ animationDelay: '0.75s', animationFillMode: 'forwards' }}
+        >
+          <h3 className="text-rose-100 text-2xl md:text-3xl font-bold text-center mb-4">
+            Build Your Bouquet
+          </h3>
+          <p className="text-rose-200/90 text-center text-sm md:text-base mb-6 max-w-md mx-auto">
+            Pick roses to create a custom bouquet for your love 💐
+          </p>
+          
+          {/* Rose picker buttons */}
+          <div className="flex justify-center gap-3 sm:gap-4 mb-6 flex-wrap">
+            {PICK_ROSE_OPTIONS.map((rose) => (
+              <button
+                key={rose.id}
+                type="button"
+                onClick={() => addToBouquet(rose)}
+                className="px-4 sm:px-6 py-3 rounded-xl bg-white/[0.08] border-2 border-rose-400/30 hover:border-rose-400/60 hover:bg-rose-500/10 transition-all duration-300 hover:scale-110 active:scale-95"
+                style={{
+                  borderColor: `${rose.color}40`,
+                }}
+              >
+                <span
+                  className="text-3xl sm:text-4xl block"
+                  style={{
+                    filter: rose.id === 'red' ? undefined : rose.id === 'pink' ? 'hue-rotate(-20deg) saturate(1.2)' : rose.id === 'yellow' ? 'hue-rotate(-45deg) saturate(0.9) brightness(1.1)' : 'grayscale(1) brightness(1.5)',
+                  }}
+                >
+                  🌹
+                </span>
+                <span className="text-rose-100 text-xs sm:text-sm font-medium">{rose.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Bouquet display */}
+          {bouquet.length > 0 && (
+            <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl border-2 border-rose-400/30 p-6 sm:p-8 animate-fadeUpIn">
+              <div className="flex justify-center items-end gap-1 sm:gap-2 mb-4 flex-wrap min-h-[80px]">
+                {bouquet.map((rose, idx) => (
+                  <button
+                    key={rose.uniqueId}
+                    type="button"
+                    onClick={() => removeFromBouquet(rose.uniqueId)}
+                    className="text-4xl sm:text-5xl md:text-6xl transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer"
+                    style={{
+                      filter: rose.id === 'red' ? 'none' : rose.id === 'pink' ? 'hue-rotate(-20deg) saturate(1.2)' : rose.id === 'yellow' ? 'hue-rotate(-45deg) saturate(0.9) brightness(1.1)' : 'grayscale(1) brightness(1.5)',
+                      animationDelay: `${idx * 0.1}s`,
+                    }}
+                    title="Click to remove"
+                  >
+                    🌹
+                  </button>
+                ))}
+              </div>
+              <div className="text-center">
+                <p className="text-rose-100 text-lg md:text-xl font-medium mb-2">
+                  Your Bouquet: {bouquet.length} {bouquet.length === 1 ? 'Rose' : 'Roses'} 💐
+                </p>
+                <p className="text-rose-200/80 text-sm">Click a rose to remove it</p>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Give a rose — button */}
         <div
           className="flex flex-col items-center mb-16 animate-fadeUpIn opacity-0"
-          style={{ animationDelay: '0.85s', animationFillMode: 'forwards' }}
+          style={{ animationDelay: '0.95s', animationFillMode: 'forwards' }}
         >
           <p className="text-rose-200/90 text-center mb-4">Please click here 👇</p>
           <button
@@ -344,21 +535,6 @@ function RoseDay() {
           >
             This one's for you 🌹
           </button>
-        </div>
-
-        {/* Video — middle (full width) */}
-        <div
-          className="w-screen relative left-1/2 -ml-[50vw] mb-12 sm:mb-16 animate-fadeUpIn opacity-0"
-          style={{ animationDelay: '0.9s', animationFillMode: 'forwards' }}
-        >
-          <video
-            src="/media/Rose 2.mp4"
-            muted
-            playsInline
-            controls
-            className="w-full h-auto aspect-video min-h-[200px] sm:min-h-[260px] md:min-h-[320px] object-cover"
-            preload="metadata"
-          />
         </div>
 
         {/* Rose row */}
@@ -453,17 +629,179 @@ function RoseDay() {
           </div>
         </div>
 
-        {/* Video — last (full width) */}
-        <div className="w-screen relative left-1/2 -ml-[50vw] mt-10 sm:mt-14 md:mt-16 animate-fadeUpIn opacity-0" style={{ animationDelay: '1.9s', animationFillMode: 'forwards' }}>
-          <video
-            src="/media/Rose 3.mp4"
-            muted
-            playsInline
-            controls
-            className="w-full h-auto aspect-video min-h-[200px] sm:min-h-[260px] md:min-h-[320px] object-cover"
-            preload="metadata"
-          />
+        {/* Petal Catch Game - Enhanced */}
+        <div
+          className="mb-14 animate-fadeUpIn opacity-0"
+          style={{ animationDelay: '1.95s', animationFillMode: 'forwards' }}
+        >
+          <div className="bg-gradient-to-br from-rose-900/30 to-rose-800/20 backdrop-blur-xl rounded-3xl border-2 border-rose-400/40 p-6 sm:p-8 md:p-10 relative overflow-hidden shadow-2xl">
+            {/* Decorative garden background */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-green-900/40 to-transparent" />
+            </div>
+
+            <h3 className="text-rose-100 text-2xl md:text-3xl font-bold text-center mb-2 relative z-10">
+              🌸 Rose Petal Catcher 🌸
+            </h3>
+            <p className="text-rose-200/90 text-center text-sm md:text-base mb-6 relative z-10">
+              Catch falling petals! Regular petals = 10pts, ⭐ Golden petals = 50pts!<br />
+              <span className="text-rose-300 font-semibold">Build combos by catching quickly for bonus points!</span>
+            </p>
+
+            {!gameActive && !gameOver && (
+              <div className="text-center py-10 relative z-10">
+                <div className="flex justify-center gap-3 mb-6">
+                  {['🌹', '🌺', '🌸', '🌷'].map((e, i) => (
+                    <span key={i} className="text-6xl md:text-7xl animate-roseFloat" style={{ animationDelay: `${i * 0.15}s` }}>{e}</span>
+                  ))}
+                </div>
+                <p className="text-rose-100 text-lg md:text-xl mb-3">Ready for the petal challenge?</p>
+                <p className="text-rose-200/80 text-sm mb-6">40 seconds • Progressive difficulty • Combo system</p>
+                <button
+                  type="button"
+                  onClick={startPetalGame}
+                  className="px-12 py-6 rounded-2xl bg-gradient-to-r from-rose-500/50 to-pink-500/50 hover:from-rose-500/60 hover:to-pink-500/60 border-3 border-rose-300/50 text-white font-bold text-xl md:text-2xl shadow-2xl hover:scale-105 active:scale-100 transition-all duration-300"
+                >
+                  🎮 Start Challenge
+                </button>
+              </div>
+            )}
+
+            {gameActive && (
+              <div className="relative z-10">
+                {/* Enhanced Game HUD */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                  <div className="bg-white/[0.1] backdrop-blur-sm rounded-xl p-3 border border-rose-400/30 text-center">
+                    <p className="text-rose-200/80 text-xs mb-1">Score</p>
+                    <p className="text-2xl md:text-3xl font-bold text-rose-300">{gameScore}</p>
+                  </div>
+                  <div className="bg-white/[0.1] backdrop-blur-sm rounded-xl p-3 border border-rose-400/30 text-center">
+                    <p className="text-rose-200/80 text-xs mb-1">Time</p>
+                    <p className="text-2xl md:text-3xl font-bold text-rose-300">{gameTime}s</p>
+                  </div>
+                  <div className="bg-white/[0.1] backdrop-blur-sm rounded-xl p-3 border border-rose-400/30 text-center">
+                    <p className="text-rose-200/80 text-xs mb-1">Combo</p>
+                    <p className={`text-2xl md:text-3xl font-bold ${combo > 0 ? 'text-amber-300 animate-pulse' : 'text-rose-300'}`}>
+                      {combo > 0 ? `x${combo + 1}` : '-'}
+                    </p>
+                  </div>
+                  <div className="bg-white/[0.1] backdrop-blur-sm rounded-xl p-3 border border-rose-400/30 text-center">
+                    <p className="text-rose-200/80 text-xs mb-1">Caught</p>
+                    <p className="text-2xl md:text-3xl font-bold text-green-300">{caughtCount}</p>
+                  </div>
+                </div>
+
+                {/* Combo notification */}
+                {showComboText && combo > 1 && (
+                  <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 animate-fadeUpIn pointer-events-none">
+                    <p className="text-4xl md:text-5xl font-bold text-amber-300 drop-shadow-[0_0_20px_rgba(255,215,0,0.8)]">
+                      {combo}x COMBO! 🔥
+                    </p>
+                  </div>
+                )}
+
+                {/* Enhanced Game Area */}
+                <div className="relative bg-gradient-to-b from-rose-950/40 via-rose-900/30 to-green-950/20 rounded-2xl border-2 border-rose-400/30 h-96 sm:h-[28rem] overflow-hidden shadow-inner">
+                  {/* Garden floor */}
+                  <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-green-900/30 to-transparent pointer-events-none" />
+                  
+                  {fallingPetals.map(petal => (
+                    <button
+                      key={petal.id}
+                      type="button"
+                      onClick={() => catchPetal(petal)}
+                      className="absolute cursor-pointer transition-all hover:scale-125 active:scale-75 z-10"
+                      style={{
+                        left: `${petal.left}%`,
+                        animation: 'petalFall 4s linear forwards',
+                        filter: petal.isSpecial 
+                          ? 'drop-shadow(0 0 12px rgba(255,215,0,0.9)) drop-shadow(0 4px 8px rgba(220,20,60,0.6))'
+                          : 'drop-shadow(0 2px 8px rgba(220,20,60,0.6))',
+                        fontSize: `${petal.size}px`,
+                        transform: `rotate(${petal.rotate}deg)`,
+                      }}
+                    >
+                      <span style={{ filter: petal.isSpecial ? 'hue-rotate(45deg) saturate(2) brightness(1.5)' : 'none' }}>
+                        🌹
+                      </span>
+                      {petal.isSpecial && (
+                        <span className="absolute -top-2 -right-2 text-xl animate-pulse">⭐</span>
+                      )}
+                    </button>
+                  ))}
+                  
+                  {fallingPetals.length === 0 && !gameOver && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <p className="text-rose-200/50 text-lg mb-2">Petals are coming!</p>
+                        <p className="text-rose-300/70 text-sm">Click them quickly to build combos!</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Live Stats Bar */}
+                <div className="mt-4 flex justify-between items-center text-sm">
+                  <span className="text-rose-200/70">Missed: <span className="text-red-300 font-semibold">{missedPetals}</span></span>
+                  <span className="text-rose-200/70">Difficulty: <span className="text-amber-300 font-semibold">Level {Math.floor(difficulty)}</span></span>
+                  {combo > 0 && (
+                    <span className="text-amber-300 font-bold animate-pulse">+{combo * 5} bonus!</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {gameOver && (
+              <div className="text-center py-10 animate-fadeUpIn relative z-10">
+                <p className="text-8xl mb-6">
+                  {gameScore >= 400 ? '🏆' : gameScore >= 250 ? '🌟' : '🌹'}
+                </p>
+                <p className="text-rose-50 text-4xl md:text-5xl font-bold mb-4">Time's Up!</p>
+                
+                {/* Detailed Stats */}
+                <div className="max-w-md mx-auto mb-6 bg-white/[0.08] rounded-2xl border border-rose-400/30 p-6">
+                  <p className="text-rose-100 text-3xl md:text-4xl mb-4">
+                    <span className="text-rose-300 font-bold">{gameScore}</span> points
+                  </p>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-rose-200/70 mb-1">Petals Caught</p>
+                      <p className="text-2xl font-bold text-green-300">{caughtCount}</p>
+                    </div>
+                    <div>
+                      <p className="text-rose-200/70 mb-1">Petals Missed</p>
+                      <p className="text-2xl font-bold text-red-300">{missedPetals}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-rose-200/90 text-lg md:text-xl mb-6 max-w-lg mx-auto">
+                  {gameScore >= 400 ? '🔥 Legendary! You caught every bit of love with perfect combos!' :
+                   gameScore >= 250 ? '💎 Incredible! Your reflexes match the beauty of roses!' :
+                   gameScore >= 150 ? '🌟 Wonderful! You caught so many petals of love!' :
+                   '🌹 Every petal you caught is a moment we treasure together!'}
+                </p>
+                
+                {caughtCount > 0 && (
+                  <p className="text-rose-300/80 text-base mb-6">
+                    Accuracy: {Math.round((caughtCount / (caughtCount + missedPetals)) * 100)}% 🎯
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  onClick={startPetalGame}
+                  className="px-10 py-5 rounded-2xl bg-gradient-to-r from-rose-500/40 to-pink-500/40 hover:from-rose-500/50 hover:to-pink-500/50 border-2 border-rose-400/50 text-rose-50 font-bold text-lg md:text-xl shadow-lg hover:scale-105 transition-all duration-300"
+                >
+                  🔄 Play Again
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Love Quote Generator */}
+        <LoveQuoteGenerator className="my-14 animate-fadeUpIn opacity-0" style={{ animationDelay: '2s', animationFillMode: 'forwards' }} />
 
       </div>
     </section>

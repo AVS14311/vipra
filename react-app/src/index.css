@@ -400,6 +400,268 @@
   animation: giveRosePetal 1.2s ease-out forwards;
 }
 
+/* Propose Day: petal float, ring pop-in, glow, floating rings */
+@keyframes petalFloat {
+  0% {
+    transform: translateY(100vh) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-20vh) rotate(720deg) translateX(calc((var(--random, 0.5) - 0.5) * 100px));
+    opacity: 0;
+  }
+}
+
+@keyframes ringPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes proposalGlow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.35), inset 0 0 60px rgba(255, 215, 0, 0.08);
+  }
+}
+
+@keyframes ringFloat {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.6;
+  }
+  92% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-20vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes questionReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes emojiWave {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) translateY(-4px);
+    opacity: 0.9;
+  }
+}
+
+.animate-petalFloat {
+  animation: petalFloat 10s linear infinite;
+}
+
+.animate-ringPop {
+  animation: ringPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-proposalGlow {
+  animation: proposalGlow 3s ease-in-out infinite;
+}
+
+.animate-ringFloat {
+  animation: ringFloat 12s linear infinite;
+}
+
+.animate-questionReveal {
+  animation: questionReveal 0.7s ease-out forwards;
+}
+
+.animate-emojiWave {
+  animation: emojiWave 1.5s ease-in-out infinite;
+}
+
+/* Kiss Day: blow kiss animation */
+@keyframes blowKiss {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translateY(-40px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.5) translateY(-100px);
+    opacity: 0;
+  }
+}
+
+.animate-blowKiss {
+  animation: blowKiss 2s ease-out forwards;
+}
+
+/* Animated gradient overlay */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 105, 180, 0.3),
+    rgba(220, 20, 60, 0.2),
+    rgba(255, 182, 193, 0.3),
+    rgba(255, 105, 180, 0.2)
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: 1;
+}
+
+/* Memory card flip animation */
+@keyframes cardFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+.card-flip {
+  animation: cardFlip 0.6s ease-in-out;
+}
+
+/* Milestone celebration */
+@keyframes milestonePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Custom range slider styling */
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff 0%, #d2691e 100%);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(210,105,30,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  border: 3px solid #fff;
+  transition: all 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(210,105,30,0.8), 0 4px 12px rgba(0,0,0,0.4);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(210,105,30,0.9), 0 2px 6px rgba(0,0,0,0.5);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff 0%, #d2691e 100%);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(210,105,30,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  border: 3px solid #fff;
+  transition: all 0.3s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(210,105,30,0.8), 0 4px 12px rgba(0,0,0,0.4);
+}
+
+input[type="range"]::-moz-range-thumb:active {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(210,105,30,0.9), 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Chocolate drip animation */
+@keyframes chocolateDrip {
+  0% {
+    transform: translateY(-20px) scaleY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100px) scaleY(1);
+    opacity: 0;
+  }
+}
+
+.chocolate-drip {
+  animation: chocolateDrip 3s ease-in infinite;
+}
+
+/* Slot machine spin animation */
+@keyframes spin-slow {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 0.15s linear infinite;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   body {

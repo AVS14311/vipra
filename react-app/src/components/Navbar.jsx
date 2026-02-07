@@ -6,7 +6,6 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navLinks = [
     { path: '/home', label: 'Home' },
-    { path: '/rose-day', label: 'Rose Day' },
     { path: '/anniversary', label: 'Anniversary' },
     { path: '/love-timeline', label: 'Timeline' },
     { path: '/angry-bird', label: 'Angry Bird' },
