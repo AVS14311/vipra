@@ -1,7 +1,7 @@
-import ValentineWeek from './ValentineWeek'
+import Birthday from './Birthday'
 
 function Home({ onImageClick }) {
-  return <ValentineWeek onImageClick={onImageClick} />
+  return <Birthday onImageClick={onImageClick} />
 }
 
 export default Home

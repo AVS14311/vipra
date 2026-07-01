@@ -17,6 +17,13 @@ import PromiseDayPage from './pages/PromiseDayPage'
 import HugDayPage from './pages/HugDayPage'
 import KissDayPage from './pages/KissDayPage'
 import ValentinesDayPage from './pages/ValentinesDayPage'
+import BdaySurprisePage from './pages/BdaySurprisePage'
+import BdayTreatPage from './pages/BdayTreatPage'
+import BdayMoviePage from './pages/BdayMoviePage'
+import BdayDatePage from './pages/BdayDatePage'
+import BdayCuddlePage from './pages/BdayCuddlePage'
+import BdayEvePage from './pages/BdayEvePage'
+import BdayMainPage from './pages/BdayMainPage'
 import { useState } from 'react'
 
 function App() {
@@ -47,6 +54,13 @@ function App() {
             <Route path="/hug-day" element={<HugDayPage />} />
             <Route path="/kiss-day" element={<KissDayPage />} />
             <Route path="/valentines-day" element={<ValentinesDayPage />} />
+            <Route path="/bday-surprise" element={<BdaySurprisePage />} />
+            <Route path="/bday-treat" element={<BdayTreatPage />} />
+            <Route path="/bday-movie" element={<BdayMoviePage />} />
+            <Route path="/bday-date" element={<BdayDatePage />} />
+            <Route path="/bday-cuddle" element={<BdayCuddlePage />} />
+            <Route path="/bday-eve" element={<BdayEvePage />} />
+            <Route path="/bday-main" element={<BdayMainPage />} />
           </Routes>
         </Layout>
       </LightboxProvider>
