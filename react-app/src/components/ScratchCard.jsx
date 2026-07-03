@@ -127,7 +127,7 @@ function ScratchCard({ prize = "Good for 1 Free Backrub!" }) {
     <div className="flex flex-col items-center justify-center my-10">
       <h3 className="text-white text-2xl font-bold mb-6 drop-shadow-lg">Daily Special Coupon</h3>
       
-      <div className="relative w-80 h-40 rounded-xl overflow-hidden shadow-2xl border-4 border-dashed border-pink-300 bg-gradient-to-r from-yellow-100 to-amber-50">
+      <div className="relative w-[280px] h-40 rounded-xl overflow-hidden shadow-2xl border-4 border-dashed border-pink-300 bg-gradient-to-r from-yellow-100 to-amber-50">
         
         {/* Hidden Prize underneath */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
@@ -140,7 +140,7 @@ function ScratchCard({ prize = "Good for 1 Free Backrub!" }) {
         {/* Scratchable Canvas */}
         <canvas 
           ref={canvasRef}
-          width={320}
+          width={280}
           height={160}
           className={`absolute inset-0 cursor-crosshair transition-opacity duration-1000 ${isScratched ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         />

@@ -8,7 +8,7 @@ function LoveLetter({ message = "You mean the world to me!" }) {
       <h3 className="text-white text-2xl font-bold mb-6 drop-shadow-lg">A Special Letter For You</h3>
       
       <div 
-        className="relative w-72 h-48 cursor-pointer perspective-1000"
+        className="relative w-[280px] h-48 cursor-pointer perspective-1000"
         onClick={() => setIsOpen(!isOpen)}
       >
         {/* The Envelope Back (Base) */}
@@ -18,7 +18,7 @@ function LoveLetter({ message = "You mean the world to me!" }) {
           
           {/* The Letter that slides out */}
           <div 
-            className={`absolute w-64 bg-white/90 backdrop-blur-sm p-4 rounded-md shadow-lg transition-all duration-700 ease-in-out border border-amber-100 z-10
+            className={`absolute w-[250px] bg-white/90 backdrop-blur-sm p-4 rounded-md shadow-lg transition-all duration-700 ease-in-out border border-amber-100 z-10
               ${isOpen ? '-translate-y-32 h-56' : 'translate-y-10 h-32'}
             `}
             style={{ transitionDelay: isOpen ? '0.3s' : '0s' }}
