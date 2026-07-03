@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import PasswordPrompt from './components/PasswordPrompt'
 import Layout from './components/Layout'
 import { LightboxProvider } from './context/LightboxContext'
+import CursorTrail from './components/CursorTrail'
 import HomePage from './pages/HomePage'
 import AngryBirdPage from './pages/AngryBirdPage'
 import NewYearPage from './pages/NewYearPage'
@@ -35,6 +36,7 @@ function App() {
 
   return (
     <Router>
+      <CursorTrail />
       <LightboxProvider>
         <Layout>
           <Routes>

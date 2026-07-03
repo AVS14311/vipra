@@ -5,6 +5,7 @@ import LoveLetter from '../components/LoveLetter'
 import FloatingHearts from '../components/FloatingHearts'
 import MemoryGallery from '../components/MemoryGallery'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
+import GlassCard from '../components/GlassCard'
 import { handleInteraction } from '../utils/interactions'
 
 function BdaySurprisePage() {
@@ -36,7 +37,12 @@ function BdaySurprisePage() {
   }
 
   return (
-    <section className="min-h-[100dvh] relative overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 p-5 flex flex-col items-center justify-center">
+    <section className="min-h-[100dvh] relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 animate-liquid p-5 flex flex-col items-center justify-center">
+      
+      {/* Glowing Ambient Orbs */}
+      <div className="absolute top-10 left-10 w-96 h-96 bg-blue-400/30 rounded-full blur-[100px] orb-1 pointer-events-none"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-400/30 rounded-full blur-[100px] orb-2 pointer-events-none"></div>
+      
       <Confetti trigger={showConfetti} />
       {isUnlocked && <FloatingHearts />}
 
@@ -61,16 +67,17 @@ function BdaySurprisePage() {
         </div>
       ) : (
         <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-10 md:mt-20">
-          <div className="text-center bg-white/10 backdrop-blur-md border border-white/20 p-8 md:p-12 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-full animate-fadeUpIn">
-            <h2 className="text-white/80 text-lg md:text-xl font-medium mb-2 tracking-widest uppercase">July 2</h2>
-            <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Day 1: The Surprise</h1>
-            <p className="text-white text-xl md:text-2xl font-medium leading-relaxed drop-shadow-md mb-6">
+          {/* Upgraded Premium Card */}
+          <GlassCard className="text-center w-full max-w-4xl animate-fadeUpIn">
+            <h2 className="text-white/80 text-lg md:text-xl font-medium mb-4 tracking-[0.3em] uppercase font-sans-premium">July 2</h2>
+            <h1 className="text-white text-5xl md:text-7xl font-bold mb-8 drop-shadow-lg font-editorial">Day 1: The Surprise</h1>
+            <p className="text-white text-xl md:text-2xl font-light leading-relaxed drop-shadow-md mb-8 font-sans-premium">
               Even though there are miles between us, my heart is right there next to yours. This week is all about celebrating the most incredible person in my life.
             </p>
-            <p className="text-pink-300 font-handwriting text-xl italic">
+            <p className="text-pink-300 font-handwriting text-3xl italic">
               "Distance is just a test to see how far love can travel."
             </p>
-          </div>
+          </GlassCard>
 
           <div className="w-full flex justify-center mt-12 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
             <LoveLetter message="I miss you more than words can say. Every second we are apart only makes me love you more." />

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Confetti from '../components/Confetti'
 import FloatingHearts from '../components/FloatingHearts'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
+import GlassCard from '../components/GlassCard'
 import { handleInteraction } from '../utils/interactions'
 
 function BdayEvePage() {
@@ -45,7 +46,12 @@ function BdayEvePage() {
   }
 
   return (
-    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-900 p-5 flex flex-col items-center justify-center">
+    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-indigo-950 via-purple-900 to-blue-950 animate-liquid p-5 flex flex-col items-center justify-center">
+      
+      {/* Glowing Ambient Orbs for Space */}
+      <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[150px] orb-1 pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] orb-2 pointer-events-none"></div>
+
       <Confetti trigger={showConfetti} />
       {isRevealed && <FloatingHearts />}
 
@@ -92,18 +98,18 @@ function BdayEvePage() {
         </div>
       ) : (
         <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-10 md:mt-20">
-          <div className="text-center bg-indigo-950/40 backdrop-blur-md border border-indigo-500/30 p-8 md:p-12 rounded-3xl shadow-[0_0_50px_rgba(99,102,241,0.2)] w-full animate-fadeUpIn">
-            <h2 className="text-indigo-300 text-lg md:text-xl font-medium mb-2 tracking-widest uppercase">July 7</h2>
-            <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-indigo-100">
+          <GlassCard className="text-center w-full animate-fadeUpIn">
+            <h2 className="text-indigo-300 text-lg md:text-xl font-medium mb-4 tracking-[0.3em] uppercase font-sans-premium">July 7</h2>
+            <h1 className="text-white text-5xl md:text-7xl font-bold mb-8 drop-shadow-[0_0_30px_rgba(255,255,255,0.6)] text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-indigo-100 font-editorial">
               Day 6: Counting Stars ✨
             </h1>
-            <p className="text-indigo-100 text-xl md:text-2xl font-light leading-relaxed mb-6 font-serif">
+            <p className="text-indigo-100/90 text-xl md:text-2xl font-light leading-relaxed mb-8 font-sans-premium">
               I look up at the same stars as you, wishing on every single one that the distance between us disappears. Get ready for your special day, my love.
             </p>
-            <p className="text-indigo-300 font-handwriting text-xl italic mb-6">
+            <p className="text-indigo-300 font-handwriting text-4xl italic mb-6 drop-shadow-lg">
               "You are my sun, my moon, and all of my stars."
             </p>
-          </div>
+          </GlassCard>
 
           <div className="w-full max-w-2xl mt-20 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
             <LoveQuoteGenerator />

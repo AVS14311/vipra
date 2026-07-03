@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import FloatingHearts from '../components/FloatingHearts'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
+import GlassCard from '../components/GlassCard'
 import { handleInteraction } from '../utils/interactions'
 
 function BdayDatePage() {
@@ -26,10 +27,16 @@ function BdayDatePage() {
   }
 
   return (
-    <section className={`min-h-[100dvh] relative overflow-x-hidden transition-colors duration-1000 flex flex-col items-center justify-center p-5
-      ${allLit ? 'bg-gradient-to-br from-rose-900 to-red-950' : 'bg-gray-950'}
+    <section className={`min-h-[100dvh] relative overflow-x-hidden transition-colors duration-1000 flex flex-col items-center justify-center p-5 animate-liquid
+      ${allLit ? 'bg-gradient-to-br from-rose-900 via-red-950 to-black' : 'bg-gradient-to-br from-gray-900 via-black to-gray-950'}
     `}>
-      {allLit && <FloatingHearts />}
+      {allLit && (
+        <>
+          <FloatingHearts />
+          <div className="absolute top-20 left-20 w-[400px] h-[400px] bg-rose-600/20 rounded-full blur-[100px] orb-1 pointer-events-none"></div>
+          <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-red-700/20 rounded-full blur-[100px] orb-2 pointer-events-none"></div>
+        </>
+      )}
       
       {!allLit && (
         <h2 className="absolute top-20 text-white/50 text-2xl font-light text-center animate-pulse">
@@ -73,17 +80,17 @@ function BdayDatePage() {
       <div className={`absolute inset-0 z-10 flex flex-col items-center justify-center p-5 pt-32 transition-opacity duration-1000
         ${allLit ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
       `}>
-        <div className="text-center bg-black/30 backdrop-blur-md border border-rose-500/30 p-8 md:p-12 rounded-3xl shadow-[0_0_60px_rgba(255,50,50,0.2)] w-full max-w-4xl">
-          <h2 className="text-rose-300 text-lg md:text-xl font-medium mb-2 tracking-widest uppercase font-handwriting">July 5</h2>
-          <h1 className="text-rose-100 text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Day 4: My Only One</h1>
-          <p className="text-rose-100/90 text-xl md:text-2xl font-medium leading-relaxed mb-6">
+        <GlassCard className="text-center w-full max-w-4xl">
+          <h2 className="text-rose-300 text-lg md:text-xl font-medium mb-4 tracking-[0.3em] uppercase font-sans-premium">July 5</h2>
+          <h1 className="text-rose-100 text-5xl md:text-7xl font-bold mb-8 drop-shadow-lg font-editorial">Day 4: My Only One</h1>
+          <p className="text-rose-100/90 text-xl md:text-2xl font-light leading-relaxed mb-8 font-sans-premium">
             If I could, I'd take you to the most beautiful place in the world tonight. Until then, I built this little candle-lit sanctuary just for us. I am so deeply in love with you.
           </p>
-          <p className="text-rose-200 font-handwriting text-xl italic mb-6">
+          <p className="text-rose-200 font-handwriting text-3xl italic mb-6">
             "I look at you and see the rest of my life in front of my eyes."
           </p>
-          <div className="text-6xl mt-4 animate-pulse">❤️</div>
-        </div>
+          <div className="text-6xl mt-8 animate-pulse drop-shadow-2xl">❤️</div>
+        </GlassCard>
 
         <div className="w-full max-w-2xl mt-20 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
           <LoveQuoteGenerator />

@@ -3,15 +3,18 @@ import { Link } from 'react-router-dom'
 import ScratchCard from '../components/ScratchCard'
 import FloatingHearts from '../components/FloatingHearts'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
+import GlassCard from '../components/GlassCard'
 
 function BdayMoviePage() {
   const [isTorn, setIsTorn] = useState(false)
 
   return (
-    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-red-900 p-5 flex flex-col items-center justify-center">
+    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 animate-liquid p-5 flex flex-col items-center justify-center">
       {isTorn && <FloatingHearts />}
       
-      {/* Neon glowing ambient lights */}
+      {/* Neon glowing ambient lights & Orbs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 bg-red-600/20 blur-[120px] pointer-events-none orb-1"></div>
+      <div className="absolute bottom-20 right-0 w-96 h-96 bg-red-900/30 rounded-full blur-[100px] orb-2 pointer-events-none"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-red-600/30 blur-[100px] pointer-events-none"></div>
 
       {!isTorn ? (
@@ -45,13 +48,13 @@ function BdayMoviePage() {
         </div>
       ) : (
         <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-10 md:mt-20">
-          <div className="text-center bg-black/40 backdrop-blur-md border border-red-500/50 p-8 md:p-12 rounded-3xl shadow-[0_0_50px_rgba(255,0,0,0.2)] w-full animate-fadeUpIn">
-            <h2 className="text-red-400 text-lg md:text-xl font-mono mb-2 tracking-widest uppercase">July 4</h2>
-            <h1 className="text-white text-4xl md:text-6xl font-black mb-6 tracking-wider">Day 3: Missing You</h1>
-            <p className="text-white/80 text-xl md:text-2xl font-medium leading-relaxed mb-6">
+          <GlassCard className="text-center w-full animate-fadeUpIn">
+            <h2 className="text-red-400 text-lg md:text-xl font-medium mb-4 tracking-[0.3em] uppercase font-sans-premium">July 4</h2>
+            <h1 className="text-white text-5xl md:text-7xl font-black mb-8 tracking-wider font-editorial">Day 3: Missing You</h1>
+            <p className="text-white/90 text-xl md:text-2xl font-light leading-relaxed mb-8 font-sans-premium">
               I would give anything to share a screen and just hear you breathing next to me. Until I can hold your hand in the theater, I’ll keep you perfectly safe in my heart.
             </p>
-            <p className="text-red-400 font-handwriting text-xl italic mb-8">
+            <p className="text-red-300 font-handwriting text-3xl italic mb-10 drop-shadow-md">
               "No matter the plot, my favorite part of the story is always you."
             </p>
             
@@ -59,7 +62,7 @@ function BdayMoviePage() {
             <div className="my-10 flex justify-center scale-90 md:scale-100">
               <ScratchCard prize="A virtual movie date night together 🍿" />
             </div>
-          </div>
+          </GlassCard>
 
           <div className="w-full max-w-2xl mt-20 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
             <LoveQuoteGenerator />

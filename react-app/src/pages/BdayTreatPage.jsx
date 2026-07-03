@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Confetti from '../components/Confetti'
 import FloatingHearts from '../components/FloatingHearts'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
+import GlassCard from '../components/GlassCard'
 import { handleInteraction } from '../utils/interactions'
 
 function BdayTreatPage() {
@@ -48,7 +49,12 @@ function BdayTreatPage() {
   }
 
   return (
-    <section className="min-h-[100dvh] relative overflow-hidden bg-gradient-to-br from-pink-400 to-orange-400 p-5 flex flex-col items-center justify-center">
+    <section className="min-h-[100dvh] relative overflow-hidden bg-gradient-to-br from-pink-500 via-rose-400 to-orange-400 animate-liquid p-5 flex flex-col items-center justify-center">
+      
+      {/* Glowing Ambient Orbs */}
+      <div className="absolute top-0 right-20 w-[500px] h-[500px] bg-pink-300/30 rounded-full blur-[120px] orb-1 pointer-events-none"></div>
+      <div className="absolute bottom-20 left-10 w-[400px] h-[400px] bg-orange-300/30 rounded-full blur-[100px] orb-2 pointer-events-none"></div>
+
       <Confetti trigger={showConfetti} />
       {isUnlocked && <FloatingHearts />}
 
@@ -92,17 +98,17 @@ function BdayTreatPage() {
         </div>
       ) : (
         <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-10 md:mt-20">
-          <div className="text-center bg-white/10 backdrop-blur-md border border-white/20 p-8 md:p-12 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-full animate-fadeUpIn">
-            <h2 className="text-white/80 text-lg md:text-xl font-medium mb-2 tracking-widest uppercase">July 3</h2>
-            <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Day 2: Sweetest Love</h1>
-            <p className="text-white text-xl md:text-2xl font-medium leading-relaxed drop-shadow-md mb-6">
+          <GlassCard className="text-center w-full animate-fadeUpIn">
+            <h2 className="text-white/90 text-lg md:text-xl font-medium mb-4 tracking-[0.3em] uppercase font-sans-premium">July 3</h2>
+            <h1 className="text-white text-5xl md:text-7xl font-bold mb-8 drop-shadow-lg font-editorial">Day 2: Sweetest Love</h1>
+            <p className="text-white text-xl md:text-2xl font-light leading-relaxed drop-shadow-md mb-8 font-sans-premium">
               You are the sweetest part of my life. Every day without you feels incomplete, but loving you from afar is still the greatest privilege I could ever ask for. I miss you endlessly.
             </p>
-            <p className="text-pink-200 font-handwriting text-xl italic mb-6">
+            <p className="text-pink-100 font-handwriting text-3xl italic mb-8">
               "You are my favorite thought to wake up to, and my last thought before I fall asleep."
             </p>
-            <div className="text-8xl animate-bounce">🍩</div>
-          </div>
+            <div className="text-8xl animate-bounce drop-shadow-2xl">🍩</div>
+          </GlassCard>
 
           <div className="w-full max-w-2xl mt-20 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
             <LoveQuoteGenerator />

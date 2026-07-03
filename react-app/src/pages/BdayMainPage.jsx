@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Confetti from '../components/Confetti'
 import LoveQuoteGenerator from '../components/LoveQuoteGenerator'
 import FloatingHearts from '../components/FloatingHearts'
+import GlassCard from '../components/GlassCard'
 import { handleInteraction } from '../utils/interactions'
 
 function BdayMainPage() {
@@ -34,7 +35,12 @@ function BdayMainPage() {
   }
 
   return (
-    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-fuchsia-600 via-pink-500 to-rose-500 p-5 flex flex-col items-center justify-center" style={{ paddingBottom: '5rem' }}>
+    <section className="min-h-[100dvh] relative overflow-x-hidden bg-gradient-to-br from-fuchsia-600 via-pink-600 to-rose-600 animate-liquid p-5 flex flex-col items-center justify-center" style={{ paddingBottom: '5rem' }}>
+      
+      {/* Massive Glowing Ambient Orbs */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-pink-300/30 rounded-full blur-[150px] orb-1 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-fuchsia-300/30 rounded-full blur-[150px] orb-2 pointer-events-none"></div>
+
       <Confetti trigger={showConfetti} duration={10000} />
       {isCelebration && <FloatingHearts />}
 
@@ -111,21 +117,21 @@ function BdayMainPage() {
           </div>
         </div>
       ) : (
-        <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-10 md:mt-20">
+        <div className="relative z-10 w-full max-w-5xl flex flex-col items-center mt-10 md:mt-20">
           
-          {/* Main Celebration Card */}
-          <div className="text-center bg-white/20 backdrop-blur-md border border-white/40 p-8 md:p-14 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-full max-w-4xl animate-fadeUpIn">
-            <h2 className="text-white/90 text-xl md:text-2xl font-bold mb-2 tracking-widest uppercase font-mono">July 8</h2>
-            <h1 className="text-white text-5xl md:text-7xl font-black mb-6 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+          {/* Main Celebration Card Upgraded */}
+          <GlassCard className="text-center w-full animate-fadeUpIn">
+            <h2 className="text-white/90 text-xl md:text-2xl font-medium mb-4 tracking-[0.4em] uppercase font-sans-premium">July 8</h2>
+            <h1 className="text-white text-6xl md:text-8xl font-black mb-8 drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] font-editorial">
               HAPPY BIRTHDAY! 🎂
             </h1>
-            <p className="text-white text-xl md:text-3xl font-medium leading-relaxed drop-shadow-md mb-6">
+            <p className="text-white text-2xl md:text-3xl font-light leading-relaxed drop-shadow-md mb-10 font-sans-premium">
               Happy Birthday to my whole world. The miles mean nothing when my soul is tied to yours. I am counting down the days until I can finally celebrate you in person. I love you more than words can say.
             </p>
-            <p className="text-pink-100 font-handwriting text-2xl italic">
+            <p className="text-pink-100 font-handwriting text-5xl italic drop-shadow-lg">
               "Forever is a long time, but I wouldn't mind spending it by your side."
             </p>
-          </div>
+          </GlassCard>
 
           {/* Love Quote Generator Section */}
           <div className="w-full max-w-2xl mt-32 animate-fadeUpIn opacity-0" style={{ animationDelay: '0.8s', animationFillMode: 'forwards' }}>
